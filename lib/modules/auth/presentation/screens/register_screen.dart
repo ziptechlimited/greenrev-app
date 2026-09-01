@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/gestures.dart';
 import '../../../../core/state/auth_provider.dart';
 import '../../../../core/theme/theme.dart';
 import '../../../../core/utils/image_helper.dart';
+import '../../../settings/presentation/screens/privacy_screen.dart';
+import '../../../settings/presentation/screens/terms_screen.dart';
 import 'otp_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -22,6 +25,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   
   String _selectedRole = 'customer';
   bool _obscurePassword = true;
+  bool _agreedToTerms = false;
 
   @override
   void dispose() {
@@ -273,13 +277,63 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         return null;
                       },
                     ),
+                    const SizedBox(height: 18),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: Checkbox(
+                            value: _agreedToTerms,
+                            activeColor: AppTheme.accent,
+                            checkColor: Colors.black,
+                            side: const BorderSide(color: Colors.white54),
+                            onChanged: (val) {
+                              if (val != null) {
+                                setState(() => _agreedToTerms = val);
+                              }
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: RichText(
+                            text: TextSpan(
+                              style: const TextStyle(color: Colors.white54, fontSize: 12, height: 1.5),
+                              children: [
+                                const TextSpan(text: 'I agree to the '),
+                                TextSpan(
+                                  text: 'Terms of Use',
+                                  style: const TextStyle(color: AppTheme.accent, decoration: TextDecoration.underline),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (_) => const TermsOfUseScreen()));
+                                    },
+                                ),
+                                const TextSpan(text: ' and '),
+                                TextSpan(
+                                  text: 'Privacy Policy',
+                                  style: const TextStyle(color: AppTheme.accent, decoration: TextDecoration.underline),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()));
+                                    },
+                                ),
+                                const TextSpan(text: '.'),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 36),
 
                     // Register Button
                     Container(
                       decoration: AppTheme.accentGlowDecoration(radius: 16),
                       child: ElevatedButton(
-                        onPressed: isLoading ? null : _submit,
+                        onPressed: (isLoading || !_agreedToTerms) ? null : _submit,
                         child: isLoading
                             ? const SizedBox(
                                 height: 20,

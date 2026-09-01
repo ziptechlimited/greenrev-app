@@ -5,6 +5,8 @@ import '../../../../core/state/auth_provider.dart';
 import '../../../../core/theme/theme.dart';
 import '../../../auth/presentation/screens/login_screen.dart';
 import '../../../auth/presentation/screens/register_screen.dart';
+import '../../../settings/presentation/screens/privacy_screen.dart';
+import '../../../settings/presentation/screens/terms_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -319,6 +321,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (user.role == 'customer') _buildCustomerDashboard(),
 
           const SizedBox(height: 32),
+          // Legal Links
+          OutlinedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const TermsOfUseScreen()),
+              );
+            },
+            child: const Text('TERMS OF USE'),
+          ),
+          const SizedBox(height: 12),
+          OutlinedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
+              );
+            },
+            child: const Text('PRIVACY POLICY'),
+          ),
+          const SizedBox(height: 12),
           // Logout button
           OutlinedButton(
             onPressed: () => auth.logout(),
