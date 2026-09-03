@@ -46,12 +46,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     setState(() => _isSubmittingProduct = true);
     try {
+      final imageUrls = _prodImg.text.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+      final primaryImage = imageUrls.isNotEmpty ? imageUrls.first : '';
+
       final body = {
         'name': _prodName.text.trim(),
         'make': _prodMake.text.trim(),
         'category': _prodCategory,
         'price': _prodPrice.text.trim(),
-        'image': _prodImg.text.trim(),
+        'image': primaryImage,
+        'images': imageUrls,
       };
 
       await _apiClient.post('/api/v1/products', body: body);
@@ -134,8 +138,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 TextFormField(
                   controller: _prodImg,
                   style: const TextStyle(color: Colors.white, fontSize: 13),
-                  decoration: const InputDecoration(labelText: 'IMAGE URL', labelStyle: TextStyle(color: AppTheme.textSubtle, fontSize: 10)),
-                  validator: (val) => val == null || val.trim().isEmpty ? 'Image URL is required' : null,
+                  decoration: const InputDecoration(labelText: 'IMAGE URLs (comma separated)', labelStyle: TextStyle(color: AppTheme.textSubtle, fontSize: 10)),
+                  validator: (val) => val == null || val.trim().isEmpty ? 'At least one image URL is required' : null,
                 ),
               ],
             ),

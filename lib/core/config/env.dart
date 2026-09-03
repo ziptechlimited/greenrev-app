@@ -1,11 +1,18 @@
-class Env {
-  static const String _defaultUrl = 'https://api.greenrevs.com';
+import 'dart:io' show Platform;
 
+class Env {
   static String get apiBaseUrl {
-    const overrideUrl = String.fromEnvironment('API_BASE_URL');
-    if (overrideUrl.isNotEmpty) {
-      return overrideUrl.replaceAll(RegExp(r'/$'), '');
+    const fromEnv = String.fromEnvironment('API_BASE_URL');
+    if (fromEnv.isNotEmpty) {
+      return fromEnv.replaceAll(RegExp(r'/$'), '');
     }
-    return _defaultUrl;
+    
+    try {
+      if (Platform.isAndroid) {
+        return 'http://10.0.2.2:4000';
+      }
+    } catch (_) {}
+    
+    return 'http://localhost:4000';
   }
 }
